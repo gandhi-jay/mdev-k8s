@@ -1,0 +1,40 @@
+# This is I am applying using
+# kubectl apply
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-app
+  labels:
+    app: sample-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sample-app
+  template:
+    metadata:
+      labels:
+        app: sample-app
+    spec:
+      containers:
+        - name: sample-app
+          image: docker.io/altf4llc/fem-kubernetes:v1
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              value: postgres
+            - name: DB_PASSWORD
+              value: demo-not-a-real-password
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            failureThreshold: 30
+            periodSeconds: 2
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            periodSeconds: 5
