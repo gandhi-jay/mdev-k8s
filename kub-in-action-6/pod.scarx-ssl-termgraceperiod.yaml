@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: scarx-ssl-termgrace
+spec:
+  # shareProcessNamespace: true
+  terminationGracePeriodSeconds: 5
+  containers:
+    - name: scarx
+      image: filterkaafi/scarx:0.2
+      stdin: true
+      ports:
+        - name: http
+          containerPort: 8080
+    - name: envoy
+      image: filterkaafi/scarx-ssl-proxy:0.1
+      ports:
+        - name: https
+          containerPort: 8443
+        - name: admin
+          containerPort: 9901

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-conditions-pod
+spec:
+  initContainers:
+  - name: install-assets
+    image: busybox
+    command: ['sh', '-c', 'sleep 5'] # Simulates initialization work
+  containers:
+  - name: web-app
+    image: nginx
+    ports:
+    - containerPort: 80
+    readinessProbe:
+      httpGet:
+        path: /
+        port: 80
+      initialDelaySeconds: 3

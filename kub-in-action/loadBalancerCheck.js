@@ -47,7 +47,7 @@ const bar = (pct, width = 20) => {
 function fetchText(url) {
     return new Promise((resolve, reject) => {
         const lib = url.startsWith("https") ? https : http;
-        const req = lib.get(url, { timeout: 10_000 }, (res) => {
+        const req = lib.get(url, { timeout: 10_000, rejectUnauthorized: false  }, (res) => {
             let body = "";
             res.on("data", (chunk) => (body += chunk));
             res.on("end", () => resolve({ ok: true, body, status: res.statusCode }));

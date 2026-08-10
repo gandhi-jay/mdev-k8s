@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: scarx-ssl-with-init-sidecar
+spec:
+  # shareProcessNamespace: true
+  initContainers:
+    - name: init-demo
+      image: filterkaafi/init-demo:0.2
+    - name: network-meter
+      image: filterkaafi/network-traffic-meter:0.2
+      restartPolicy: Always # explicitly for native-sidecar containers # <-- ONLY valid here to mark it as a sidecar
+    - name: network-check
+      image: filterkaafi/network-connectivity-checker:0.2
+  containers:
+  - name: scarx
+    image: filterkaafi/scarx:0.2
+    stdin: true
+    ports:
+    - name: http
+      containerPort: 8080
+  - name: envoy
+    image: filterkaafi/scarx-ssl-proxy:0.1
+    ports:
+    - name: https
+      containerPort: 8443
+    - name: admin
+      containerPort: 9901
