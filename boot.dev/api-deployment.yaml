@@ -1,26 +1,43 @@
+# Kubernetes API version for Deployment resources
 apiVersion: apps/v1
+# The type of resource: a Deployment manages a set of identical Pods
 kind: Deployment
 metadata:
+  # Name of the Deployment, used to identify it in the cluster
   name: synergychat-api
+  # Labels attached to the Deployment itself, useful for filtering and organization
   labels:
     app: synergychat-api
 spec:
+  # Number of Pod copies to run; increase this to scale horizontally
   replicas: 1
+  # Tells the Deployment which Pods it manages
   selector:
     matchLabels:
+      # Must match the labels in the Pod template below
       app: synergychat-api
+  # Blueprint used to create each Pod
   template:
     metadata:
+      # Labels applied to every Pod created from this template
       labels:
         app: synergychat-api
     spec:
+      # List of containers that run inside each Pod
       containers:
-      - name: synergychat-api
-        image: bootdotdev/synergychat-api:latest
-        env:
-        - name: API_PORT
-          valueFrom:
-            configMapKeyRef:
-              name: synergychat-api-configmap
-              key: API_PORT
-
+        # Container name, referenced in logs and kubectl commands
+        - name: synergychat-api
+          # Docker image to run; ":latest" pulls the newest tag (consider pinning a version for production)
+          image: bootdotdev/synergychat-api:latest
+          # Environment variables injected into the container
+          env:
+            # The variable name the application reads (API_PORT)
+            - name: API_PORT
+              # Pull the value from another Kubernetes resource instead of hardcoding it
+              valueFrom:
+                # Read the value from a ConfigMap
+                configMapKeyRef:
+                  # Name of the ConfigMap that holds the value
+                  name: synergychat-api-configmap
+                  # Key within that ConfigMap whose value becomes API_PORT
+                  key: API_PORT
