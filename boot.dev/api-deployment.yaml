@@ -22,6 +22,8 @@ spec:
       # Labels applied to every Pod created from this template
       labels:
         app: synergychat-api
+    # template.metadata.labels is the label stamped onto each Pod when the Deployment creates it. It describes what the Pods are.
+    # selector.matchLabels is the query the Deployment uses to find Pods it should manage. It describes which Pods belong to this Deployment.
     spec:
       # List of containers that run inside each Pod
       containers:
